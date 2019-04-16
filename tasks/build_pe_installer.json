@@ -1,0 +1,31 @@
+{
+  "description": "Build a custom pe-installer package for use with PE",
+  "files": ["ruby_task_helper/files/task_helper.rb"],
+  "input_method": "stdin",
+  "parameters": {
+    "platforms": {
+      "description": "List of platforms for which to build the package",
+      "type": "String[1]"
+    },
+    "version": {
+      "description": "Codename PE version string",
+      "type": "String[1]"
+    },
+    "enterprise_tasks": {
+      "description": "Path to local enterprise_tasks repo",
+      "type": "Optional[String[1]]"
+    },
+    "enterprise_tasks_pr": {
+      "description": "enterprise_tasks PR number",
+      "type": "Optional[String[1]]"
+    },
+    "higgs": {
+      "description": "Path to local higgs repo",
+      "type": "Optional[String[1]]"
+    },
+    "higgs_pr": {
+      "description": "higgs PR number",
+      "type": "Optional[String[1]]"
+    }
+  }
+}
