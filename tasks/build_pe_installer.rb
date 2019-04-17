@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 require_relative '../../ruby_task_helper/files/task_helper.rb'
-require_relative '../files/build_package_helpers.rb'
+require_relative '../files/build_vanagon_package_helpers.rb'
 require 'json'
 require 'open3'
 require 'tmpdir'
@@ -22,7 +22,7 @@ class BuildPEInstallerPackage < TaskHelper
           k = k.chomp('_pr')
           component_prs[k] = v 
         else
-          v = BuildPackage::get_local_pwd(v)
+          v = BuildVanagonPackage::get_local_pwd(v)
           local_components[k] = v
         end
       end
@@ -35,15 +35,15 @@ class BuildPEInstallerPackage < TaskHelper
         raise TaskHelper::Error.new("Unable to clone pe-installer-vanagon #{dir}", 'barr.buildpackages/pe-installer-failed', output) if !status.exitstatus.zero?
 
         local_components.each do |comp, path|
-          sha = BuildPackage::get_local_sha(path)
-          BuildPackage::update_component_json('pe-installer-vanagon', comp, sha, path)
+          sha = BuildVanagonPackage::get_local_sha(path)
+          BuildVanagonPackage::update_component_json('pe-installer-vanagon', comp, sha, path)
         end
 
         component_prs.each do |comp, pr_num|
-          BuildPackage::merge_pr(comp, pr_num)
-          path = BuildPackage::get_local_pwd(comp)
-          sha = BuildPackage::get_local_sha(path)
-          BuildPackage::update_component_json('pe-installer-vanagon', comp, sha, path)
+          BuildVanagonPackage::merge_pr(comp, pr_num)
+          path = BuildVanagonPackage::get_local_pwd(comp)
+          sha = BuildVanagonPackage::get_local_sha(path)
+          BuildVanagonPackage::update_component_json('pe-installer-vanagon', comp, sha, path)
         end
 
         Dir.chdir 'pe-installer-vanagon' do

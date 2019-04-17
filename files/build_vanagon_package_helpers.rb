@@ -1,6 +1,6 @@
 require 'json'
 
-class BuildPackage
+class BuildVanagonPackage
   def self.get_local_sha(dir)
     Dir.chdir dir do
       output, status = Open3.capture2e('git rev-parse --verify HEAD')
