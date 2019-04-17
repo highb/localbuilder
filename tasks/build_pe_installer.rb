@@ -8,13 +8,18 @@ require 'tmpdir'
 
 # platform, version (codename, not numeric)
 class BuildPEInstallerPackage < TaskHelper
-  def get_local_sha_pwd(dir)
-    sha, pwd = nil, nil
+  def get_local_sha(dir)
     Dir.chdir dir do
-      sha = Open3.capture2e('git rev-parse --verify HEAD')[0].strip
-      pwd = Open3.capture2e('pwd')[0].strip
+      output, status = Open3.capture2e('git rev-parse --verify HEAD')
+      raise TaskHelper::Error.new("Unable to get most recent git SHA from local dir #{dir}", 'barr.buildpackages/pe-installer-failed', output) if !status.exitstatus.zero?
+      sha = output.strip
     end
-    [sha, pwd]
+  end
+
+  def get_local_pwd(dir)
+    Dir.chdir dir do
+      Dir.pwd
+    end
   end
 
   def update_component_json(component, sha, pwd)
@@ -30,25 +35,17 @@ class BuildPEInstallerPackage < TaskHelper
 
   def task(platforms: nil, **kwargs)
     version = kwargs[:version]
-    enterprise_tasks = kwargs[:enterprise_tasks]
-    enterprise_tasks_pr = kwargs[:enterprise_tasks_pr]
-    higgs = kwargs[:higgs]
-    higgs_pr = kwargs[:higgs_pr]
 
-    enterprise_tasks_sha = nil
-    enterprise_tasks_pwd = nil
-    if enterprise_tasks
-      enterprise_tasks_sha, enterprise_tasks_pwd = get_local_sha_pwd(enterprise_tasks)
-    elsif enterprise_tasks_pr
+    local_components = {}
+    component_prs = {}
+    kwargs.each do |k,v|
+      if k.to_s != 'platforms' && k.to_s != 'version' && !k.to_s.start_with?('_')
+        # If key points to a PR, add k:v to PR hash, else add k:v to local components hash
+        v = get_local_pwd(v)
+        k.to_s.end_with?("_pr") ? component_prs[k] = v : local_components[k] = v
+      end
     end
-
-    higgs_sha = nil
-    higgs_pwd = nil
-    if higgs
-      higgs_sha, higgs_pwd = get_local_sha_pwd(higgs)
-    elsif higgs_pr
-    end
-
+    
     output = ''
     Dir.mktmpdir do |dir|
       Dir.chdir dir do
@@ -57,15 +54,12 @@ class BuildPEInstallerPackage < TaskHelper
 
         Dir.chdir 'pe-installer-vanagon' do
           output, status = Open3.capture2e('bundle install')
-          if enterprise_tasks_sha
-            update_component_json('enterprise_tasks', enterprise_tasks_sha, enterprise_tasks_pwd)
-          end
 
-          if higgs_sha 
-            update_component_json('higgs', higgs_sha, higgs_pwd)
+          local_components.each do |comp, path|
+            sha = get_local_sha(path)
+            update_component_json(comp, sha, path)
           end
-
-          platforms = [platforms]
+          
           platforms.each do |platform|
             output, status = Open3.capture2e("bundle exec build pe-installer #{platform}")
             raise TaskHelper::Error.new("Unable to build PE Installer package for platform #{platform}", 'barr.buildpackages/pe-installer-failed', output) if !status.exitstatus.zero?
@@ -80,10 +74,4 @@ class BuildPEInstallerPackage < TaskHelper
   end
 end
 
-if __FILE__ == $PROGRAM_NAME
-  begin
-    BuildPEInstallerPackage.run 
-  rescue TaskHelper::Error => e
-    FileUtils.remove_entry_secure Dir.tmpdir
-  end
-end
+BuildPEInstallerPackage.run if __FILE__ == $PROGRAM_NAME

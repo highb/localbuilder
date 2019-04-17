@@ -5,7 +5,7 @@
   "parameters": {
     "platforms": {
       "description": "List of platforms for which to build the package",
-      "type": "String[1]"
+      "type": "Array[String]"
     },
     "version": {
       "description": "Codename PE version string",
