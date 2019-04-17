@@ -23,15 +23,26 @@ class BuildPEInstallerPackage < TaskHelper
   end
 
   def update_component_json(component, sha, pwd)
-    component_json = File.read("configs/components/#{component}.json")
+    component_json = File.read("pe-installer-vanagon/configs/components/#{component}.json")
     component_hash = JSON.parse(component_json)
 
     component_hash['ref'] = sha
     component_hash['url'] = pwd
-    f = File.open("configs/components/#{component}.json", 'w+')
+    f = File.open("pe-installer-vanagon/configs/components/#{component}.json", 'w+')
     f.write(component_hash.to_json)
     f.close
   end
+
+  def merge_pr(component, pr_num)
+    output, status = Open3.capture2e("git clone git@github.com:puppetlabs/#{component}")
+    raise TaskHelper::Error.new("Failed to clone puppetlabs repo #{component}", 'barr.buildpackages/pe-installer-failed', output) if !status.exitstatus.zero?
+
+    Dir.chdir component do
+      output, status = Open3.capture2e("git fetch origin pull/#{pr_num}/head:merge-pr-local && git checkout merge-pr-local")
+      raise TaskHelper::Error.new("Failed to fetch PR number #{pr_num} from puppetlabs/#{component}", 'barr.buildpackages/pe-installer-failed', output) if !status.exitstatus.zero?
+    end
+  end
+
 
   def task(platforms: nil, **kwargs)
     version = kwargs[:version]
@@ -41,8 +52,13 @@ class BuildPEInstallerPackage < TaskHelper
     kwargs.each do |k,v|
       if k.to_s != 'platforms' && k.to_s != 'version' && !k.to_s.start_with?('_')
         # If key points to a PR, add k:v to PR hash, else add k:v to local components hash
-        v = get_local_pwd(v)
-        k.to_s.end_with?("_pr") ? component_prs[k] = v : local_components[k] = v
+        if k.to_s.end_with?('_pr')
+          k = k.to_s.chomp('_pr')
+          component_prs[k] = v 
+        else
+          v = get_local_pwd(v)
+          local_components[k] = v
+        end
       end
     end
     
@@ -52,14 +68,22 @@ class BuildPEInstallerPackage < TaskHelper
         output, status = Open3.capture2e("git clone -b #{version} --single-branch git@github.com:puppetlabs/pe-installer-vanagon.git")
         raise TaskHelper::Error.new("Unable to clone pe-installer-vanagon #{dir}", 'barr.buildpackages/pe-installer-failed', output) if !status.exitstatus.zero?
 
+        local_components.each do |comp, path|
+          sha = get_local_sha(path)
+          update_component_json(comp, sha, path)
+        end
+
+        component_prs.each do |comp, pr_num|
+          merge_pr(comp, pr_num)
+          path = get_local_pwd(comp)
+          sha = get_local_sha(path)
+          update_component_json(comp, sha, path)
+        end
+
         Dir.chdir 'pe-installer-vanagon' do
           output, status = Open3.capture2e('bundle install')
+          raise TaskHelper::Error.new("Failed to install gem dependencies for pe-installer-vanagon", 'barr.buildpackages/pe-installer-failed', output) if !status.exitstatus.zero?
 
-          local_components.each do |comp, path|
-            sha = get_local_sha(path)
-            update_component_json(comp, sha, path)
-          end
-          
           platforms.each do |platform|
             output, status = Open3.capture2e("bundle exec build pe-installer #{platform}")
             raise TaskHelper::Error.new("Unable to build PE Installer package for platform #{platform}", 'barr.buildpackages/pe-installer-failed', output) if !status.exitstatus.zero?
