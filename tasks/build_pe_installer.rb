@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 require_relative '../../ruby_task_helper/files/task_helper.rb'
-require '../lib/build_package_helpers.rb'
+require_relative '../files/build_package_helpers.rb'
 require 'json'
 require 'open3'
 require 'tmpdir'
@@ -15,10 +15,11 @@ class BuildPEInstallerPackage < TaskHelper
     local_components = {}
     component_prs = {}
     kwargs.each do |k,v|
-      if k.to_s != 'platforms' && k.to_s != 'version' && !k.to_s.start_with?('_')
+      k = k.to_s
+      if k != 'platforms' && k != 'version' && !k.start_with?('_')
         # If key points to a PR, add k:v to PR hash, else add k:v to local components hash
-        if k.to_s.end_with?('_pr')
-          k = k.to_s.chomp('_pr')
+        if k.end_with?('_pr')
+          k = k.chomp('_pr')
           component_prs[k] = v 
         else
           v = BuildPackage::get_local_pwd(v)

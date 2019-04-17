@@ -1,0 +1,47 @@
+{
+  "description": "Build a custom pe-installer package for use with PE",
+  "files": ["ruby_task_helper/files/task_helper.rb", "localbuilder/files/build_package_helpers.rb"],
+  "input_method": "stdin",
+  "parameters": {
+    "platforms": {
+      "description": "List of platforms for which to build the package",
+      "type": "Array[String]"
+    },
+    "version": {
+      "description": "Codename PE version string",
+      "type": "String[1]"
+    },
+    "puppet_enterprise_modules": {
+      "description": "Path to local puppet-enterprise-modules repo",
+      "type": "Optional[String[1]]"
+    },
+    "puppet_enterprise_modules_pr": {
+      "description": "puppet-enterprise-modules PR number",
+      "type": "Optional[String[1]]"
+    },
+    "pe_r10k": {
+      "description": "Path to local puppetlabs-pe_r10k repo",
+      "type": "Optional[String[1]]"
+    },
+    "pe_r10k_pr": {
+      "description": "puppetlabs-pe_r10k PR number",
+      "type": "Optional[String[1]]"
+    },
+    "pe_razor": {
+      "description": "Path to local puppetlabs-pe_razor repo",
+      "type": "Optional[String[1]]"
+    },
+    "pe_razor_pr": {
+      "description": "puppetlabs-pe_razor PR number",
+      "type": "Optional[String[1]]"
+    },
+    "pe_support_script": {
+      "description": "Path to local puppetlabs-pe_support_script repo",
+      "type": "Optional[String[1]]"
+    },
+    "pe_support_script_pr": {
+      "description": "puppetlabs-pe_support_script PR number",
+      "type": "Optional[String[1]]"
+    }
+  }
+}

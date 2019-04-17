@@ -1,6 +1,6 @@
 {
   "description": "Build a custom pe-installer package for use with PE",
-  "files": ["ruby_task_helper/files/task_helper.rb"],
+  "files": ["ruby_task_helper/files/task_helper.rb", "localbuilder/files/build_package_helpers.rb"],
   "input_method": "stdin",
   "parameters": {
     "platforms": {
