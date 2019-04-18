@@ -8,10 +8,10 @@ require 'json'
 require 'open3'
 require 'tmpdir'
 
-# platform, version (codename, not numeric)
 class BuildPEInstallerPackage < TaskHelper
   def task(platforms: nil, **kwargs)
     # If the version is passed in as 'x.y' or 'x.y.z', make sure it's git friendly (i.e. 2018.1.x instead of 2018.1 or 2018.1.7)
+    # If version is a codename, it remains a codename
     version = PEVersion.convert_to_git_version(kwargs[:version])
 
     local_components = {}

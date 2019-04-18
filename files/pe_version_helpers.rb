@@ -49,6 +49,8 @@ class PEVersion
     end
   end
 
+  # Take a starting repo branch and a PE version, return correct repo branch to check out
+  # If the branch is 'master' or a version earlier than 2017.1, we do not change branches
   def self.match_version_to_git_branch(branch, version)
     # sanitize branch/version to ensure it'll match with our self.versions array
     branch = branch.chomp('.x') if branch.end_with?('.x')
@@ -73,6 +75,12 @@ class PEVersion
     end
   end
 
+  # This method is for handling cases when the version is in x.y form
+  #   or x.y.z form (where z is a number).
+  # Converting the form to end in '.x' allows the version to match
+  #   the version branches that we have in git.
+  # This means release branches can't ever be used, but for now I'm 
+  #   assuming this wouldn't be used with a release branch.
   def self.convert_to_git_version(version)
     if self.codenames.include?(version)
       version
