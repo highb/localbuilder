@@ -2,8 +2,8 @@
 # frozen_string_literal: true
 
 require_relative '../../ruby_task_helper/files/task_helper.rb'
-require_relative '../files/build_vanagon_package_helpers.rb'
-require_relative '../files/pe_version_helpers.rb'
+require_relative '../lib/build_vanagon_package_helpers.rb'
+require_relative '../lib/pe_version_helpers.rb'
 require 'json'
 require 'open3'
 require 'tmpdir'

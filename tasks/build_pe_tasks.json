@@ -1,8 +1,8 @@
 {
   "description": "Build a custom pe-tasks package for use with PE",
   "files": ["ruby_task_helper/files/task_helper.rb",
-      "localbuilder/files/build_vanagon_package_helpers.rb",
-      "localbuilder/files/pe_version_helpers.rb"],
+      "localbuilder/lib/build_vanagon_package_helpers.rb",
+      "localbuilder/lib/pe_version_helpers.rb"],
   "input_method": "stdin",
   "parameters": {
     "platforms": {
