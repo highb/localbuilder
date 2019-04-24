@@ -1,0 +1,16 @@
+{
+  "description": "Grab specific PE build or latest PE build from a given PE family",
+  "files": ["ruby_task_helper/files/task_helper.rb",
+      "localbuilder/lib/pe_version_helpers.rb"],
+  "input_method": "stdin",
+  "parameters": {
+    "version": {
+      "description": "The version of PE: Either a PE family (x.y) or specific version (x.y.z/x.y.z-rc...)",
+      "type": "String[1]"
+    },
+    "platform": {
+      "description": "The master platform for the PE build (defaults to el-7)",
+      "type": "Optional[String[1]]"
+    }
+  }
+}

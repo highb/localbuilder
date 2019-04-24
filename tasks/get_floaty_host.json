@@ -1,0 +1,11 @@
+{
+  "description": "Grab and return the hostname of a floaty host. Requires a valid floaty token",
+  "files": ["ruby_task_helper/files/task_helper.rb"],
+  "input_method": "stdin",
+  "parameters": {
+    "platforms": {
+      "description": "List of VM platforms to pull. Defaults to el-7-x86_64",
+      "type": "Array[String]"
+    } 
+  }
+}

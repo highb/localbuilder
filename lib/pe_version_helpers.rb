@@ -94,4 +94,28 @@ class PEVersion
       version_array.join('.')
     end
   end
+
+  def self.get_pe_family(version)
+    # There should only be one match, so just grab the first match from the scan's result array
+    version.scan(/\d{4}\.\d{1}/).first
+  end
+
+
+  # This method is for pulling down a build with a specific SHA
+  #   from somewhere like http://enterprise.delivery.puppetlabs.net
+  def self.get_build_type_from_version(version)
+    case version
+    when /\d{4}\.\d{1}.\d{1}\-rc.*/
+      # Assume version exists, if it doesn't, the curl with this version will error and that's fine
+      'rc'
+    when /\d{4}\.\d{1}\.\d{1,2}/
+      # For specific release version
+      'release'
+    when /\d{4}\.\d{1}/
+      # For PE family with x.y version
+      'family'
+    else
+      raise "The given PE version #{version} is not valid"
+    end
+  end
 end
