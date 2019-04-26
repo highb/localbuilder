@@ -54,7 +54,11 @@ class PEVersion
   def self.match_version_to_git_branch(branch, version)
     # sanitize branch/version to ensure it'll match with our self.versions array
     branch = branch.chomp('.x') if branch.end_with?('.x')
-    version_tmp = version.chomp('.x') if version.end_with?('.x')
+    version_tmp = if version.end_with?('.x')
+                    version.chomp('.x')
+                  else
+                    version
+                  end
 
     if branch == version
       nil

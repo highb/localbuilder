@@ -39,13 +39,14 @@ class GetPEBuild < TaskHelper
     build_type = PEVersion::get_build_type_from_version(version)
     url = generate_curl_url(version, build_type, platform)
 
-    abs_path_to_pe_tarball = ''
+    tarball_name = ''
     Dir.chdir '/Users/barr.iserloth/Desktop' do
-      output, status = Open3.capture2e("curl -Os #{url}")
+      output, status = Open3.capture2e("curl --fail -Os #{url}")
       raise TaskHelper::Error.new("Failed to pull down PE tarball from url #{url}", 'barr.buildpackages/get-build-failed', output) if !status.exitstatus.zero?
+      tarball_name = Open3.capture2e("ls | grep 'puppet-enterprise'")[0].strip
     end
 
-    result = { tarball_path: abs_path_to_pe_tarball }
+    result = { tarball_name: tarball_name }
     result.to_json
   end
 end
