@@ -1,0 +1,4 @@
+{
+  "description": "Get a list of all custom packages to add into a PE tarball",
+  "files": ["ruby_task_helper/files/task_helper.rb"]
+}
