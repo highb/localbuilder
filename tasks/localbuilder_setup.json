@@ -1,0 +1,4 @@
+ {
+   "description": "Prep localbuilder tmp/ directory",
+   "files": ["ruby_task_helper/files/task_helper.rb"]
+ }

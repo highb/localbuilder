@@ -64,7 +64,8 @@ class BuildPETasksPackage < TaskHelper
           platforms.each do |platform|
             output, status = Open3.capture2e("bundle exec build pe-tasks #{platform}")
             raise TaskHelper::Error.new("Unable to build pe-tasks package for platform #{platform}", 'barr.buildpackages/pe-tasks-failed', output) if !status.exitstatus.zero?
-            output, status = Open3.capture2e("mv output/ ~/Desktop/pe-tasks-package")
+            file = Open3.capture2e("find output -name 'pe-tasks*'")[0].strip
+            _, status = Open3.capture2e("mv #{file} /tmp/localbuilder/packages")
           end
         end
       end

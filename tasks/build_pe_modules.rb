@@ -66,7 +66,8 @@ class BuildPEModulesPackage < TaskHelper
           platforms.each do |platform|
             output, status = Open3.capture2e("bundle exec build pe-modules #{platform}")
             raise TaskHelper::Error.new("Unable to build pe-modules package for platform #{platform}", 'barr.buildpackages/pe-modules-failed', output) if !status.exitstatus.zero?
-            output, status = Open3.capture2e("mv output/ ~/Desktop/pe-modules-package")
+            file = Open3.capture2e("find output -name 'pe-modules*'")[0].strip
+            output, _ = Open3.capture2e("mv #{file} /tmp/localbuilder/packages")
           end
         end
       end
