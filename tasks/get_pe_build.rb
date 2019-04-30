@@ -1,4 +1,4 @@
-#!/opt/puppetlabs/puppet/bin/ruby
+#!/usr/bin/ruby
 # frozen_string_literal: true
 
 require_relative '../../ruby_task_helper/files/task_helper.rb'
@@ -28,7 +28,7 @@ class GetPEBuild < TaskHelper
     end
   end
 
-  def task(version:, **kwargs)
+  def task(version: nil, **kwargs)
     # In case version is passed as a codename, convert to a generic version but remove trailing '.x'
     version = PEVersion::convert_codename_to_version(version).chomp('.x') if PEVersion::codenames.include?(version)
     
@@ -39,14 +39,16 @@ class GetPEBuild < TaskHelper
     build_type = PEVersion::get_build_type_from_version(version)
     url = generate_curl_url(version, build_type, platform)
 
-    tarball_name = ''
-    Dir.chdir '/Users/barr.iserloth/Desktop' do
+    tarball_path = ''
+    Dir.chdir '/root' do
       output, status = Open3.capture2e("curl --fail -Os #{url}")
       raise TaskHelper::Error.new("Failed to pull down PE tarball from url #{url}", 'barr.buildpackages/get-build-failed', output) if !status.exitstatus.zero?
+      pwd = Open3.capture2e('pwd')[0].strip
       tarball_name = Open3.capture2e("ls | grep 'puppet-enterprise'")[0].strip
+      tarball_path = pwd + '/' + tarball_name
     end
 
-    result = { tarball_name: tarball_name }
+    result = { tarball_path: tarball_path }
     result.to_json
   end
 end

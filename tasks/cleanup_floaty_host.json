@@ -1,0 +1,11 @@
+{
+  "description": "Cleanup a provisioned floaty host",
+  "files": ["ruby_task_helper/files/task_helper.rb"],
+  "input_method": "stdin",
+  "parameters": {
+    "hostname": {
+      "description": "The hostname of the floaty host to clean up",
+      "type": "String[1]"
+    } 
+  }
+}
