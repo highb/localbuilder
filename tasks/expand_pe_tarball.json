@@ -1,0 +1,12 @@
+{
+  "description": "Unzip a PE tarball",
+  "files": ["ruby_task_helper/files/task_helper.rb",
+      "localbuilder/lib/pe_version_helpers.rb"],
+  "input_method": "stdin",
+  "parameters": {
+    "tarball": {
+      "description": "Path to a PE tarball",
+      "type": "String[1]"
+    }
+  }
+}
