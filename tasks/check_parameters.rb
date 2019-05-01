@@ -8,7 +8,8 @@ class CheckParameters < TaskHelper
   def task(parameters_hash: nil, **kwargs)
     changes_present = false
     parameters_hash.each do |k,v|
-      changes_present = true if v != 'undef'
+      # If v exists, then there is a component with a change
+      changes_present = true if v
     end
     result = { changes_present: changes_present }
     result.to_json
