@@ -13,21 +13,17 @@
       "description": "Codename PE version string",
       "type": "String[1]"
     },
-    "enterprise_tasks": {
-      "description": "Path to local enterprise_tasks repo",
-      "type": "Optional[String[1]]"
+    "vanagon_project": {
+      "description": "The name of the vanagon project to build a package from",
+      "type": "String[1]"
     },
-    "enterprise_tasks_pr": {
-      "description": "enterprise_tasks PR number",
-      "type": "Optional[String[1]]"
+    "local_vanagon_components": {
+      "description": "A list of local repos containing changes for pe-installer-vanagon components, used to build a custom pe-installer package",
+      "type": "Optional[Hash]"
     },
-    "higgs": {
-      "description": "Path to local higgs repo",
-      "type": "Optional[String[1]]"
-    },
-    "higgs_pr": {
-      "description": "higgs PR number",
-      "type": "Optional[String[1]]"
+    "vanagon_component_prs": {
+      "description": "A list of PRs with changes for pe-installer-vanagon components, used to build a custom pe-installer package",
+      "type": "Optional[Hash]"
     }
   }
 }

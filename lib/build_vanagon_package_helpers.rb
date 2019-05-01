@@ -2,7 +2,7 @@ require 'json'
 require 'open3'
 require_relative './pe_version_helpers.rb'
 
-class BuildVanagonPackage
+class BuildVanagonPackageHelpers
   def self.get_local_sha(dir)
     Dir.chdir dir do
       output, status = Open3.capture2e('git rev-parse --verify HEAD')
