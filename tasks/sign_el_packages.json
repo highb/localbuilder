@@ -1,0 +1,20 @@
+{
+  "description": "Replace packages in PE with given custom packages, and sign those packages",
+  "files": ["ruby_task_helper/files/task_helper.rb",
+  "localbuilder/files/GPG-KEY-localbuilder",
+  "localbuilder/files/GPG-KEY-localbuilder.pub"],
+  "parameters": {
+    "packages": {
+      "description": "PE package(s) to replace",
+      "type": "Array[String]"
+    },
+    "pe_dir": {
+      "description": "Path to an expanded PE tarball",
+      "type": "String[1]"
+    },
+    "platform": {
+      "description": "Platform on which to inject/sign the package(s)",
+      "type": "String"
+    }
+  }
+}
