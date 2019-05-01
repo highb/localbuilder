@@ -1,6 +1,6 @@
 plan localbuilder::build_pe(
   String $platform = 'el-7-x86_64',
-  String $version = 'kearney',
+  String $version,
 
   # This parameter specifies the output_dir to put the custom PE build
   # It defaults to locabuilder/builds, which is pointed to locally by this default since it's 
