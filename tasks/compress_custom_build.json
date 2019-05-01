@@ -1,0 +1,10 @@
+ {
+   "description": "Turn unzipped PE directory with custom changes back into a tarball",
+   "files": ["ruby_task_helper/files/task_helper.rb"],
+   "parameters": {
+     "directory_path": {
+       "description": "Path to the custom PE directory",
+       "type": "String[1]"
+     }
+   }
+ }

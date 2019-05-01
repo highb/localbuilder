@@ -1,0 +1,18 @@
+  {
+   "description": "Download a created custom PE build from the vmpooler host where it was built",
+   "files": ["ruby_task_helper/files/task_helper.rb"],
+   "parameters": {
+     "vm": {
+       "description": "The VM from which to pull the PE tarball",
+       "type": "String[1]"
+     },
+     "tarball_path": {
+       "description": "The path to the PE tarball",
+       "type": "String[1]"
+     },
+     "output_dir": {
+       "description": "The local destination for the PE tarball (defaults to localbuilder/builds)",
+       "type": "String[1]"
+     }
+   }
+ }

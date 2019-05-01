@@ -1,6 +1,11 @@
 plan localbuilder::build_pe(
   String $platform = 'el-7-x86_64',
   String $version = 'kearney',
+
+  # This parameter specifies the output_dir to put the custom PE build
+  # It defaults to locabuilder/builds, which is pointed to locally by this default since it's 
+  #   relative based on the location of literal task itself, not where the user runs it from
+  Optional[String] $output_dir = 'builds/',
 #####################################
 # pe-backup-tools package parameters
 #####################################
@@ -89,5 +94,8 @@ plan localbuilder::build_pe(
 
   run_task(localbuilder::sign_el_packages, $vm, packages => $packages_list, pe_dir => $pe_dir, platform => $platform)
 
-  #run_task(localbuilder::cleanup_floaty_host, localhost, hostname => $vm) 
+  $custom_tarball_path = run_task(localbuilder::compress_custom_build, $vm, directory_path => $pe_dir).first().value()['tarball_path']
+  $local_tarball_path = run_task(localbuilder::download_custom_pe_build, localhost, vm => $vm, tarball_path => $custom_tarball_path, output_dir => $output_dir).first().value()['local_tarball_path']
+
+  run_task(localbuilder::cleanup_floaty_host, localhost, hostname => $vm) 
 }
