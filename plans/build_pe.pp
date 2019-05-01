@@ -103,17 +103,17 @@ plan localbuilder::build_pe(
   $local_pe_tasks_params = { 'puppetlabs-facter_task' => $facter_task, 'puppetlabs-package' => $package, 'puppetlabs-puppet_conf' => $puppet_conf, 'puppetlabs-pe_installer_cd4pe' => $pe_installer_cd4pe, 'puppetlabs-service' => $service }
   $pe_tasks_pr_params = { 'puppetlabs-facter_task' => $facter_task_pr, 'puppetlabs-package' => $package_pr, 'puppetlabs-puppet_conf' => $puppet_conf_pr, 'puppetlabs-pe_installer_cd4pe' => $pe_installer_cd4pe_pr, 'puppetlabs-service' => $service_pr }
 
-  $local_changes_tasks = run_task(localbuilder::check_parameters, localhost, parameters_hash => $local_pe_installer_params).first().value()['changes_present']
-  $pr_changes_tasks = run_task(localbuilder::check_parameters, localhost, parameters_hash => $pe_installer_pr_params).first().value()['changes_present']
+  $local_changes_tasks = run_task(localbuilder::check_parameters, localhost, parameters_hash => $local_pe_tasks_params).first().value()['changes_present']
+  $pr_changes_tasks = run_task(localbuilder::check_parameters, localhost, parameters_hash => $pe_tasks_pr_params).first().value()['changes_present']
 
   if $local_changes_tasks and $pr_changes_tasks {
-    run_task(localbuilder::build_vanagon_package, localhost, platforms => [$platform], version => $version, vanagon_project => 'pe-tasks', local_vanagon_components => $local_pe_tasks_params, vanagon_component_prs => $pe_tasks_pr_params)
+    run_task(localbuilder::build_vanagon_package, localhost, platforms => [$platform], version => $version, vanagon_project => 'pe-tasks-vanagon', local_vanagon_components => $local_pe_tasks_params, vanagon_component_prs => $pe_tasks_pr_params)
   }
   elsif $local_changes_tasks {
-    run_task(localbuilder::build_vanagon_package, localhost, platforms => [$platform], version => $version, vanagon_project => 'pe-tasks', local_vanagon_components => $local_pe_tasks_params)
+    run_task(localbuilder::build_vanagon_package, localhost, platforms => [$platform], version => $version, vanagon_project => 'pe-tasks-vanagon', local_vanagon_components => $local_pe_tasks_params)
   }
   elsif $pr_changes_tasks {
-    run_task(localbuilder::build_vanagon_package, localhost, platforms => [$platform], version => $version, vanagon_project => 'pe-tasks', vanagon_component_prs => $pe_tasks_pr_params)
+    run_task(localbuilder::build_vanagon_package, localhost, platforms => [$platform], version => $version, vanagon_project => 'pe-tasks-vanagon', vanagon_component_prs => $pe_tasks_pr_params)
   }
   
 ########################################
@@ -130,5 +130,5 @@ plan localbuilder::build_pe(
 
   run_task(localbuilder::sign_el_packages, $vm, packages => $packages_list, pe_dir => $pe_dir, platform => $platform)
 
-  run_task(localbuilder::cleanup_floaty_host, localhost, hostname => $vm) 
+  #run_task(localbuilder::cleanup_floaty_host, localhost, hostname => $vm) 
 }
