@@ -131,5 +131,4 @@ plan localbuilder::build_pe(
   run_task(localbuilder::sign_el_packages, $vm, packages => $packages_list, pe_dir => $pe_dir, platform => $platform)
 
   run_task(localbuilder::cleanup_floaty_host, localhost, hostname => $vm) 
-  run_task(localbuilder::localbuilder_cleanup, localhost) 
 }

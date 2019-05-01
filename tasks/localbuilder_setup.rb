@@ -6,8 +6,13 @@ require 'open3'
 
 class LocalbuilderSetup < TaskHelper
   def task(_)
-    Open3.capture2e('mkdir /tmp/localbuilder') 
-    Open3.capture2e('mkdir /tmp/localbuilder/packages') 
+    _, status = Open3.capture2e('test -e /tmp/localbuilder')
+    if status.exitstatus.zero?
+      # Clear out packages from the last localbuilder run
+      Open3.capture2e('rm -rf /tmp/localbuilder/packages/*')
+    else
+      Open3.capture2e('mkdir -p /tmp/localbuilder/packages') 
+    end
   end
 end
 
