@@ -13,37 +13,13 @@
       "description": "Codename PE version string",
       "type": "String[1]"
     },
-    "puppet_enterprise_modules": {
-      "description": "Path to local puppet-enterprise-modules repo",
-      "type": "Optional[String[1]]"
+    "local_pe_modules_components": {
+      "description": "A list of local repos containing changes for pe-modules-vanagon components, used to build a custom pe-modules package",
+      "type": "Optional[Hash]"
     },
-    "puppet_enterprise_modules_pr": {
-      "description": "puppet-enterprise-modules PR number",
-      "type": "Optional[String[1]]"
-    },
-    "pe_r10k": {
-      "description": "Path to local puppetlabs-pe_r10k repo",
-      "type": "Optional[String[1]]"
-    },
-    "pe_r10k_pr": {
-      "description": "puppetlabs-pe_r10k PR number",
-      "type": "Optional[String[1]]"
-    },
-    "pe_razor": {
-      "description": "Path to local puppetlabs-pe_razor repo",
-      "type": "Optional[String[1]]"
-    },
-    "pe_razor_pr": {
-      "description": "puppetlabs-pe_razor PR number",
-      "type": "Optional[String[1]]"
-    },
-    "pe_support_script": {
-      "description": "Path to local puppetlabs-pe_support_script repo",
-      "type": "Optional[String[1]]"
-    },
-    "pe_support_script_pr": {
-      "description": "puppetlabs-pe_support_script PR number",
-      "type": "Optional[String[1]]"
+    "pe_modules_component_prs": {
+      "description": "A list of PRs with changes for pe-modules-vanagon components, used to build a custom pe-modules package",
+      "type": "Optional[Hash]"
     }
   }
 }

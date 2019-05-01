@@ -1,0 +1,11 @@
+{
+  "description": "Check for presence of local or PR changes for a PE package",
+  "files": ["ruby_task_helper/files/task_helper.rb"],
+  "input_method": "stdin",
+  "parameters": {
+    "parameters_hash": {
+      "description": "Hash of all the parameters given to the build_pe plan",
+      "type": "Hash"
+    } 
+  }
+}

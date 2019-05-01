@@ -9,34 +9,21 @@ require 'open3'
 require 'tmpdir'
 
 class BuildPEModulesPackage < TaskHelper
-  def task(platforms: nil, **kwargs)
+  def task(platforms: nil, local_pe_modules_components: nil, pe_modules_component_prs: nil, **kwargs)
     # If the version is passed in as 'x.y' or 'x.y.z', make sure it's git friendly (i.e. 2018.1.x instead of 2018.1 or 2018.1.7)
     # If version is a codename, it remains a codename
     version = PEVersion.convert_to_git_version(kwargs[:version])
 
-    local_components = {}
-    component_prs = {}
-    kwargs.each do |k,v|
-      k = k.to_s
-      if k != 'platforms' && k != 'version' && !k.start_with?('_')
-        # update key to match module repo names for modules not in puppet-enterprise-modules
-        if k =~ /puppet_enterprise_modules/
-          # ugly underscore/hyphen mangling since Bolt does not allow params with hyphens
-          k = k.gsub('_', '-')
-          k = k.chomp('-pr').concat('_pr') if k.end_with?('-pr')
-        else
-          k = 'puppetlabs-' + k
-        end
-        if k.end_with?('_pr')
-          k = k.chomp('_pr')
-          component_prs[k] = v 
-        else
-          v = BuildVanagonPackage::get_local_pwd(v)
-          local_components[k] = v
-        end
+    # Grab pwd for local components
+    local_pe_modules_components.each do |k, v|
+      if v
+        v = BuildVanagonPackage::get_local_pwd(v)
+        local_pe_modules_components[k] = v
+      else 
+        local_pe_modules_components.delete(k)
       end
     end
-    
+
     output = ''
     Dir.mktmpdir do |dir|
       Dir.chdir dir do
@@ -47,17 +34,17 @@ class BuildPEModulesPackage < TaskHelper
           BuildVanagonPackage::switch_to_correct_git_branch(version, 'pe-modules-vanagon')
         end
 
-        local_components.each do |comp, path|
+        local_pe_modules_components.each do |comp, path|
           sha = BuildVanagonPackage::get_local_sha(path)
           BuildVanagonPackage::update_component_json('pe-modules-vanagon', comp, sha, path)
-        end
+        end if local_pe_modules_components
 
-        component_prs.each do |comp, pr_num|
+        pe_modules_component_prs.each do |comp, pr_num|
           BuildVanagonPackage::merge_pr(comp, pr_num, version)
           path = BuildVanagonPackage::get_local_pwd(comp)
           sha = BuildVanagonPackage::get_local_sha(path)
           BuildVanagonPackage::update_component_json('pe-modules-vanagon', comp, sha, path)
-        end
+        end if pe_modules_component_prs
 
         Dir.chdir 'pe-modules-vanagon' do
           output, status = Open3.capture2e('bundle install')
