@@ -41,7 +41,7 @@ class BuildVanagonPackageHelpers
     raise TaskHelper::Error.new("Failed to checkout branch #{new_branch} in puppetlabs/#{component}", 'barr.buildpackages/build-package-failed', output) if status && !status.exitstatus.zero?
   end
 
-  def self.merge_pr(component, pr_num, version)
+  def self.merge_pr(component, pr_list, version)
     output, status = Open3.capture2e("git clone git@github.com:puppetlabs/#{component}")
     raise TaskHelper::Error.new("Failed to clone puppetlabs repo #{component}", 'barr.buildpackages/build-package-failed', output) if !status.exitstatus.zero?
 
@@ -51,8 +51,13 @@ class BuildVanagonPackageHelpers
       # if the branch is already on the given version, don't switch branches
       self.switch_to_correct_git_branch(version, component)
       
-      output, status = Open3.capture2e("git fetch origin pull/#{pr_num}/head:merge-pr-local && git checkout merge-pr-local")
-      raise TaskHelper::Error.new("Failed to fetch PR number #{pr_num} from puppetlabs/#{component}", 'barr.buildpackages/build-package-failed', output) if !status.exitstatus.zero?
+      pr_list.each do |pr_num|
+        output, status = Open3.capture2e("git pull origin pull/#{pr_num}/head:merge-to-local")
+        raise TaskHelper::Error.new("Failed to fetch PR number #{pr_num} from puppetlabs/#{component}", 'barr.buildpackages/build-package-failed', output) if !status.exitstatus.zero?
+      end
+
+      output, status = Open3.capture2e("git checkout merge-to-local")
+      raise TaskHelper::Error.new("Failed to merge PR(s) number #{pr_list} from puppetlabs/#{component}", 'barr.buildpackages/build-package-failed', output) if !status.exitstatus.zero?
     end
   end
 end

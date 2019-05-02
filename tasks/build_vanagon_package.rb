@@ -47,7 +47,12 @@ class BuildVanagonPackage < TaskHelper
     end if local_vanagon_components
 
     vanagon_component_prs.each do |k, v|
-      if !v
+      if v
+        # Because passing in params is hard, if a comma-delimited list of PRs is passed in 
+          # it's currently treated as a single string, this handles that...
+        v = v.split(',') if v.include?(',')
+        vanagon_component_prs[k] = v
+      else
         # Remove any entries witih an undefined value
         vanagon_component_prs.delete(k)
       end
@@ -65,6 +70,7 @@ class BuildVanagonPackage < TaskHelper
         end
 
         local_vanagon_components.each do |comp, path|
+          comp = comp.to_s
           sha = BuildVanagonPackageHelpers::get_local_sha(path)
 
           # pe-tasks and pe-backup-tools both have edge cases where the repository name does not match the vanagon component name
@@ -73,8 +79,9 @@ class BuildVanagonPackage < TaskHelper
           BuildVanagonPackageHelpers::update_component_json(vanagon_project, comp, sha, path)
         end if local_vanagon_components
 
-        vanagon_component_prs.each do |comp, pr_num|
-          BuildVanagonPackageHelpers::merge_pr(comp, pr_num, version)
+        vanagon_component_prs.each do |comp, pr_list|
+          comp = comp.to_s
+          BuildVanagonPackageHelpers::merge_pr(comp, pr_list, version)
           path = BuildVanagonPackageHelpers::get_local_pwd(comp)
           sha = BuildVanagonPackageHelpers::get_local_sha(path)
 
