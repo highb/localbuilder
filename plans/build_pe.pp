@@ -67,9 +67,6 @@ plan localbuilder::build_pe(
   $local_pe_backup_tools_params = { 'pe-backup-tools' => $pe_backup_tools }
   $pe_backup_tools_pr_params = { 'pe-backup-tools' => $pe_backup_tools_pr }
 
-  $local_changes_backup_tools = run_task(localbuilder::check_parameters, localhost, parameters_hash => $local_pe_backup_tools_params).first().value()['changes_present']
-  $pr_changes_backup_tools = run_task(localbuilder::check_parameters, localhost, parameters_hash => $pe_backup_tools_pr_params).first().value()['changes_present']
-
   run_plan(localbuilder::handle_package_creation, platform => $platform, version => $version, vanagon_project => 'pe-backup-tools-vanagon', local_vanagon_components => $local_pe_backup_tools_params, vanagon_component_prs => $pe_backup_tools_pr_params)
 
 ####################################
@@ -97,5 +94,5 @@ plan localbuilder::build_pe(
   $custom_tarball_path = run_task(localbuilder::compress_custom_build, $vm, directory_path => $pe_dir).first().value()['tarball_path']
   $local_tarball_path = run_task(localbuilder::download_custom_pe_build, localhost, vm => $vm, tarball_path => $custom_tarball_path, output_dir => $output_dir).first().value()['local_tarball_path']
 
-  run_task(localbuilder::cleanup_floaty_host, localhost, hostname => $vm) 
+  run_task(localbuilder::cleanup_floaty_host, localhost, hostname => $vm)
 }
