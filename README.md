@@ -39,6 +39,9 @@ For the latest Irving rc build using local puppet-enterprise-modules changes and
 
 `bolt plan run localbuilder::build_pe platform=el-7-x86_64 version=irving puppet_enterprise_modules=<some-path-to>/puppet-enterprise-modules enterprise_tasks_pr=42`
 
+For the latest Kearney build with local changes for the puppetlabs-pe_r10k repo
+`bolt plan run localbuilder::build_pe platform=el-7-x86_64 version=2019.1 pe_r10k=<some-path-to>/puppetlabs-pe_r10k`
+
 You can also pass in the `output_dir` parameter to define where you want your PE build to show up. If you don't pass in anything at all, the build will be placed into the `localbuilder/builds` directory.
 
 ## Limitations
