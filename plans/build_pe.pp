@@ -95,4 +95,6 @@ plan localbuilder::build_pe(
   $local_tarball_path = run_task(localbuilder::download_custom_pe_build, localhost, vm => $vm, tarball_path => $custom_tarball_path, output_dir => $output_dir).first().value()['local_tarball_path']
 
   run_task(localbuilder::cleanup_floaty_host, localhost, hostname => $vm)
+  
+  return("PE tarball successfully downloaded to: ${local_tarball_path}")
 }

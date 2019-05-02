@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require_relative '../../ruby_task_helper/files/task_helper.rb'
+require_relative '../lib/build_vanagon_package_helpers.rb'
 require 'open3'
 
 class DownloadCustomPEBuild < TaskHelper
@@ -19,7 +20,10 @@ class DownloadCustomPEBuild < TaskHelper
     raise TaskHelper::Error.new("Could not download custom PE build from #{vm}:#{tarball_path} to #{output_dir}", 'barr.localbuilder/download-custom-pe-build-failed', output) if !status.exitstatus.zero?
 
     tarball_name = tarball_path.split('/').last
-    output_dir.chomp('/') if output_dir.end_with?('/')
+
+    # Create absolute path to PE tarball to output to user
+    # output_dir may already be an abspath, but this won't hurt to do even in that case
+    output_dir = BuildVanagonPackageHelpers.get_local_pwd(output_dir)
     local_tarball_path = output_dir + '/' + tarball_name
 
     result = { local_tarball_path: local_tarball_path }

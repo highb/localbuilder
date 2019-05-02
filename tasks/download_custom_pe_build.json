@@ -1,6 +1,8 @@
   {
    "description": "Download a created custom PE build from the vmpooler host where it was built",
-   "files": ["ruby_task_helper/files/task_helper.rb"],
+   "files": ["ruby_task_helper/files/task_helper.rb",
+       "localbuilder/lib/build_vanagon_package_helpers.rb",
+       "localbuilder/lib/pe_version_helpers.rb"],
    "parameters": {
      "vm": {
        "description": "The VM from which to pull the PE tarball",
