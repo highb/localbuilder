@@ -17,7 +17,7 @@ This tool is for creating local dev builds of Puppet Enterprise using Bolt, wher
   * puppetlabs-puppet_conf
   * puppetlabs-pe_installer_cd4pe
   * puppetlabs-service
-  
+
 This tool can be used to build packages based on locally committed changes to one of the above repositories, or based on a list of PRs to one of the repos above. If both local changes and PR changes are passed in for the same repo, they fight to the death and currently the PR changes will win every time and overwrite any of the locally passed-in changes. So there's room for improvement, is what I'm saying.
 
 This is set up like a Bolt module, so it may need to get put into a boltdir (in a `site-modules/localbuilder/` directory, or listed as a local module in a Puppetfile and put into `<boltdir>/modules/localbuilder`) to actually allow it to work properly.
@@ -47,11 +47,18 @@ For the latest Kearney build with local changes for the puppetlabs-pe_r10k repo:
 bolt plan run localbuilder::build_pe platform=el-7-x86_64 version=2019.1 pe_r10k=<some-path-to>/puppetlabs-pe_r10k
 ```
 
+For the latest Johnson rc build with two puppet-enterprise-modules PRs, outputting to `~/Desktop`:
+
+```
+bolt plan run localbuilder::build_pe platform=el-7-x86_64 version=johnson puppet_enterprise_modules_pr=60,61 output_dir=~/Desktop
+```
+
 You can also pass in the `output_dir` parameter to define where you want your PE build to show up. If you don't pass in anything at all, the build will be placed into the `localbuilder/builds` directory.
 
 ## Limitations
 
 * Currently (5/1/2019), this only works for creating PE builds for el-7-x86_64
 * Can only be used to get builds of version PE 2017.1 or newer
+  * One caveat is that puppet-enterprise-modules doesn't actually have a branch earlier than 2018.1, so you can't currently get a 2017.y build with changes from that repo since 2017.y pe-modules packages rely on archived pe-modules repos
 * Can only build vanagon packages, so this can't make builds based on changes to any of PE's ezbake packages
   * This is a feature I'd like to add, but I have to actually learn how ezbake works first

@@ -53,11 +53,10 @@ class BuildVanagonPackageHelpers
       
       pr_list.each do |pr_num|
         output, status = Open3.capture2e("git pull origin pull/#{pr_num}/head:merge-to-local")
-        raise TaskHelper::Error.new("Failed to fetch PR number #{pr_num} from puppetlabs/#{component}", 'barr.buildpackages/build-package-failed', output) if !status.exitstatus.zero?
+        raise TaskHelper::Error.new("Failed to merge PR number #{pr_num} from puppetlabs/#{component}", 'barr.buildpackages/build-package-failed', output) if !status.exitstatus.zero?
       end
 
-      output, status = Open3.capture2e("git checkout merge-to-local")
-      raise TaskHelper::Error.new("Failed to merge PR(s) number #{pr_list} from puppetlabs/#{component}", 'barr.buildpackages/build-package-failed', output) if !status.exitstatus.zero?
+      Open3.capture2e("git checkout merge-to-local")
     end
   end
 end
