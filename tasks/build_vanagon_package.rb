@@ -15,10 +15,10 @@ class BuildVanagonPackage < TaskHelper
     # changes them so that they match the actual vanagon component names
   def handle_component_name_transformations(vanagon_project, component)
     case vanagon_project
-    when 'pe-backup-tools'
+    when 'pe-backup-tools-vanagon'
       # The json file is named rubygem-pe_backup_tools, so we need to handle that component name here
       component = 'rubygem-' + component.gsub('-', '_') if component = 'pe-backup-tools'
-    when 'pe-tasks'
+    when 'pe-tasks-vanagon'
       # The pe-tasks-vanagon components (mostly) have 'puppetlabs-' removed from the start of the repo names
       # This case handles that, and transforms the repo names to drop 'puppetlabs-'
         # Except for the one case where 'puppetlabs-' stays
@@ -50,7 +50,9 @@ class BuildVanagonPackage < TaskHelper
       if v
         # Because passing in params is hard, if a comma-delimited list of PRs is passed in 
           # it's currently treated as a single string, this handles that...
-        v = v.split(',') if v.include?(',')
+          # Since we expect an array no matter what, put it into an array if it's a single PR
+          # I swear this is maybe better than having to pass in a correctly-formatted array to Bolt
+        v.include?(',') ? v = v.split(',') : v = [v]
         vanagon_component_prs[k] = v
       else
         # Remove any entries witih an undefined value
@@ -74,7 +76,7 @@ class BuildVanagonPackage < TaskHelper
           sha = BuildVanagonPackageHelpers::get_local_sha(path)
 
           # pe-tasks and pe-backup-tools both have edge cases where the repository name does not match the vanagon component name
-          comp = handle_component_name_transformations(vanagon_project, comp) if vanagon_project == 'pe-tasks' || vanagon_project == 'pe-backup-tools'
+          comp = handle_component_name_transformations(vanagon_project, comp) if vanagon_project == 'pe-tasks-vanagon' || vanagon_project == 'pe-backup-tools-vanagon'
 
           BuildVanagonPackageHelpers::update_component_json(vanagon_project, comp, sha, path)
         end if local_vanagon_components
@@ -86,7 +88,7 @@ class BuildVanagonPackage < TaskHelper
           sha = BuildVanagonPackageHelpers::get_local_sha(path)
 
           # pe-tasks and pe-backup-tools both have edge cases where the repository name does not match the vanagon component name
-          comp = handle_component_name_transformations(vanagon_project, comp) if vanagon_project == 'pe-tasks' || vanagon_project == 'pe-backup-tools'
+          comp = handle_component_name_transformations(vanagon_project, comp) if vanagon_project == 'pe-tasks-vanagon' || vanagon_project == 'pe-backup-tools-vanagon'
 
           BuildVanagonPackageHelpers::update_component_json(vanagon_project, comp, sha, path)
         end if vanagon_component_prs
