@@ -4,6 +4,10 @@
 require_relative '../../ruby_task_helper/files/task_helper.rb'
 require 'open3'
 
+# Thanks to Joshua Partlow's meep_tools and the existing frankenbuilder script for providing the entire basis for this package signing
+# https://github.com/jpartlow/meep_tools/blob/master/tasks/sign_and_update_deb_repo.sh
+# The functionality is essentially identical, but I ported the bash script to Ruby, although this
+#   mostly ended up being calls to shell commands anyway...
 class SignELPackages < TaskHelper
   def task(packages: nil, pe_dir: nil, platform: nil, **kwargs)
     signed = false
