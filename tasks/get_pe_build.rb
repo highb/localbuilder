@@ -33,7 +33,7 @@ class GetPEBuild < TaskHelper
     version = PEVersion::convert_codename_to_version(version).chomp('.x') if PEVersion::codenames.include?(version)
     
     # Default to el-7 if no platform value is given
-    kwargs[:platform] ? platform = kwargs[:platform] : platform = 'el-7-x86_64'
+    platform = kwargs[:platform]
     
     # Build types: rc (for a specific rc/sha version of PE), release (for an x.y.z release build), and family (for a generic x.y PE family version)
     build_type = PEVersion::get_build_type_from_version(version)

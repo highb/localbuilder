@@ -16,8 +16,10 @@ class GetFloatyHost < TaskHelper
       el_version = platform.split('-')[1]
       "centos-#{el_version}-x86_64"
     when /ubuntu/
-      # Catch when ubuntu is passed in with x.y versions, which it may have to be for pe_repo (? I need to check)
-      platform.strip('.')
+      # ubuntu platform strings should also be ubuntu-<version>-...
+      # also, if the version is passed in with a '.', that should be deleted for vmpooler platform names 
+      ubuntu_version = platform.split('-')[1].delete('.')
+      "ubuntu-#{ubuntu_version}-x86_64"
     else
       # I _think_ some platform strings shouldn't need any modification
       platform

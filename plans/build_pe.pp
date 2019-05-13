@@ -85,16 +85,16 @@ plan localbuilder::build_pe(
   $pe_dir = run_task(localbuilder::expand_pe_tarball, $vm, tarball => $tarball_path).first().value()['pe_dir']
   $packages_list = run_task(localbuilder::get_custom_packages, localhost).first().value()['package_list']
   
-  $packages_list.each |String $filename| {
-    upload_file("/tmp/localbuilder/packages/${filename}", "${pe_dir}/packages/${platform}/${filename}", $vm)
+  $packages_list.each |String $package_name| {
+    upload_file("/tmp/localbuilder/packages/${package_name}", "${pe_dir}/packages/${platform}/${package_name}", $vm)
   }
 
-  run_task(localbuilder::sign_el_packages, $vm, packages => $packages_list, pe_dir => $pe_dir, platform => $platform)
+  run_plan(localbuilder::sign_packages, packages => $packages_list, pe_dir => $pe_dir, platform => $platform, host => $vm)
 
   $custom_tarball_path = run_task(localbuilder::compress_custom_build, $vm, directory_path => $pe_dir).first().value()['tarball_path']
   $local_tarball_path = run_task(localbuilder::download_custom_pe_build, localhost, vm => $vm, tarball_path => $custom_tarball_path, output_dir => $output_dir).first().value()['local_tarball_path']
 
-  run_task(localbuilder::cleanup_floaty_host, localhost, hostname => $vm)
+  #run_task(localbuilder::cleanup_floaty_host, localhost, hostname => $vm)
   
   return("PE tarball successfully downloaded to: ${local_tarball_path}")
 }
