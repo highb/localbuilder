@@ -94,7 +94,7 @@ plan localbuilder::build_pe(
   $custom_tarball_path = run_task(localbuilder::compress_custom_build, $vm, directory_path => $pe_dir).first().value()['tarball_path']
   $local_tarball_path = run_task(localbuilder::download_custom_pe_build, localhost, vm => $vm, tarball_path => $custom_tarball_path, output_dir => $output_dir).first().value()['local_tarball_path']
 
-  #run_task(localbuilder::cleanup_floaty_host, localhost, hostname => $vm)
+  run_task(localbuilder::cleanup_floaty_host, localhost, hostname => $vm)
   
   return("PE tarball successfully downloaded to: ${local_tarball_path}")
 }
