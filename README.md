@@ -57,8 +57,9 @@ You can also pass in the `output_dir` parameter to define where you want your PE
 
 ## Limitations
 
-* Currently (5/12/2019), this supports creating custom builds for supported PE master platforms besides sles
-  * the functionality technically works for making el-6 builds, but the system Ruby on el-6 is too old to actually run the tasks in their current state, so that's another platform-related issue at the moment (but there's a workaround)
+* Currently (5/12/2019), the `build_pe` plan has issues with building on el-6 because the system Ruby that the tasks rely on is too old to handle the Ruby code in the tasks
+  * The functionality for signing on el-6 works if you deal with the Ruby issue manually, but a fix being part of this repo so that it's automated is planned
+  * Besides this Ruby version issue, the `build_pe` plan works on all supported PE master platforms
 * Can only be used to get builds of version PE 2017.1 or newer
   * One caveat is that puppet-enterprise-modules doesn't actually have a branch earlier than 2018.1, so you can't currently get a 2017.y build with changes from that repo since 2017.y pe-modules packages rely on archived pe-modules repos
 * Can only build vanagon packages, so this can't make builds based on changes to any of PE's ezbake packages
