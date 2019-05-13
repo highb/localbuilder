@@ -36,7 +36,7 @@ class SignSlesPackages < TaskHelper
     raise TaskHelper::Error.new("Failed to remove package artifacts", 'barr.localbuilder/sign-sles-package-failed', output) if !status.exitstatus.zero?
 
     # Sign packages
-    output, status = Open3.capture2e("gpg --detach-sign --armor --force-v3-sigs \"#{package_dir}/repodata/repodata.xml\"")
+    output, status = Open3.capture2e("gpg --detach-sign --armor --force-v3-sigs \"#{package_dir}/repodata/repomd.xml\"")
     raise TaskHelper::Error.new("Failed to remove package artifacts", 'barr.localbuilder/sign-sles-package-failed', output) if !status.exitstatus.zero?
 
     result = true
