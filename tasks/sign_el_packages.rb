@@ -14,6 +14,7 @@ class SignELPackages < TaskHelper
 
     gpg_private = "#{kwargs[:_installdir]}/localbuilder/files/GPG-KEY-localbuilder"
     gpg_public = "#{kwargs[:_installdir]}/localbuilder/files/GPG-KEY-localbuilder.pub"
+    package_dir = "#{pe_dir}/packages/#{platform}"
 
     Open3.capture2e('yum install -y rpm-sign createrepo expect')
     
@@ -38,7 +39,7 @@ class SignELPackages < TaskHelper
         keyid = "--key-id frankenbuilder"
       end
 
-      package_location = "#{pe_dir}/packages/#{platform}/#{package}"
+      package_location = "#{package_dir}/#{package}"
       file_contents = <<-EOF
 #!/usr/bin/expect -f
 spawn rpmsign #{keyid} --addsign #{package_location}
@@ -58,8 +59,8 @@ expect eof
     end
     signed = true
 
-    output, status = Open3.capture2e("createrepo #{pe_dir}/packages/#{platform}")
-    raise TaskHelper::Error.new("createrepo call failed in this directory: #{pe_dir}/packages/#{platform}", 'barr.localbuilder/sign-el-package-failed', output) if !status.exitstatus.zero?
+    output, status = Open3.capture2e("createrepo #{package_dir}")
+    raise TaskHelper::Error.new("createrepo call failed in this directory: #{package_dir}", 'barr.localbuilder/sign-el-package-failed', output) if !status.exitstatus.zero?
     
     result = { signed: signed }
     result.to_json
