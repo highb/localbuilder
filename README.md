@@ -1,6 +1,6 @@
 # localbuilder - Make Local PE Dev Builds
 
-This tool is for creating local dev builds of Puppet Enterprise using Bolt, where the custom build can be based on any changes to the components of the following vanagon packages:
+This tool is for creating local dev builds of Puppet Enterprise using Bolt, where the custom build can be based on any changes to the components of the following vanagon packages and puppetlabs repos:
 * pe-modules-vanagon component repos:
   * puppet-enterprise-modules
   * puppetlabs-pe_r10k
@@ -17,6 +17,9 @@ This tool is for creating local dev builds of Puppet Enterprise using Bolt, wher
   * puppetlabs-puppet_conf
   * puppetlabs-pe_installer_cd4pe
   * puppetlabs-service
+* pe-installer-shim
+  
+Thus, localbuilder is at feature parity (and then some) for the PE package building piece of [Frankenbuilder](https://github.com/puppetlabs/frankenbuilder) (although it doesn't do any of the many Beaker-y things that Frankenbuilder does). 
 
 This tool can be used to build packages based on locally committed changes to one of the above repositories, or based on a list of PRs to one of the repos above. If both local changes and PR changes are passed in for the same repo, they fight to the death and currently the PR changes will win every time and overwrite any of the locally passed-in changes. So there's room for improvement, is what I'm saying.
 
