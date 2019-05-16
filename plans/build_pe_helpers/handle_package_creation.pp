@@ -1,4 +1,4 @@
-plan localbuilder::handle_package_creation(
+plan localbuilder::build_pe_helpers::handle_package_creation(
   String $platform,
   String $version,
   String $vanagon_project,

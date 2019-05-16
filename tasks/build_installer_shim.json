@@ -1,0 +1,21 @@
+{
+  "description": "Build a custom pe-installer package for use with PE",
+  "files": ["ruby_task_helper/files/task_helper.rb",
+      "localbuilder/lib/build_vanagon_package_helpers.rb",
+      "localbuilder/lib/pe_version_helpers.rb"],
+  "input_method": "stdin",
+  "parameters": {
+    "version": {
+      "description": "Codename PE version string",
+      "type": "String[1]"
+    },
+    "local_installer_shim": {
+      "description": "A list of local repos containing changes for pe-installer-vanagon components, used to build a custom pe-installer package",
+      "type": "Optional[String]"
+    },
+    "installer_shim_prs": {
+      "description": "A list of PRs with changes for pe-installer-vanagon components, used to build a custom pe-installer package",
+      "type": "Optional[String]"
+    }
+  }
+}

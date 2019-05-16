@@ -13,6 +13,22 @@ class LocalbuilderSetup < TaskHelper
     else
       Open3.capture2e('mkdir -p /tmp/localbuilder/packages') 
     end
+
+    _, status = Open3.capture2e('test -e /tmp/localbuilder/installer-shim-files')
+    if status.exitstatus.zero?
+      # Clear out shim from the last localbuilder run with shim PR changes
+      Open3.capture2e('rm -rf /tmp/localbuilder/installer-shim-files/*')
+    else
+      Open3.capture2e('mkdir /tmp/localbuilder/installer-shim-files') 
+    end
+
+    # store custom builds here
+    _, status = Open3.capture2e('test -e /tmp/localbuilder/builds')
+    if !status.exitstatus.zero?
+      Open3.capture2e('mkdir /tmp/localbuilder/builds') 
+    end
+
+
   end
 end
 

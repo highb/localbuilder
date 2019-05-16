@@ -1,4 +1,4 @@
-plan localbuilder::sign_packages(
+plan localbuilder::build_pe_helpers::sign_packages(
   Array[String] $packages,
   String $pe_dir,
   String $platform,
