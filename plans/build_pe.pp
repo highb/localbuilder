@@ -93,8 +93,10 @@ plan localbuilder::build_pe(
 #######################################
 # Handle custom pe-installer-shim files
 #######################################
-  run_plan(localbuilder::build_pe_helpers::handle_installer_shim, host => $vm, pe_dir => $pe_dir, version => $version, local_installer_shim => $pe_installer_shim, installer_shim_prs => $pe_installer_shim_pr)
-  
+  if $pe_installer_shim or $pe_installer_shim_pr {
+    run_plan(localbuilder::build_pe_helpers::handle_installer_shim, host => $vm, pe_dir => $pe_dir, version => $version, local_installer_shim => $pe_installer_shim, installer_shim_prs => $pe_installer_shim_pr)
+  }
+
 ########################
 # Upload custom packages
 ########################
