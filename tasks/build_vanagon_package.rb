@@ -24,6 +24,8 @@ class BuildVanagonPackage < TaskHelper
         # Except for the one case where 'puppetlabs-' stays
         # Because of course that case exists
       component = component.chomp('puppetlabs-') unless comp =~ /cd4pe/
+    when 'pe-modules-vanagon'
+      component = component.gsub('_', '-') if component == 'puppet_enterprise_modules'
     end
     component
   end
@@ -76,7 +78,7 @@ class BuildVanagonPackage < TaskHelper
           sha = BuildVanagonPackageHelpers::get_local_sha(path)
 
           # pe-tasks and pe-backup-tools both have edge cases where the repository name does not match the vanagon component name
-          comp = handle_component_name_transformations(vanagon_project, comp) if vanagon_project == 'pe-tasks-vanagon' || vanagon_project == 'pe-backup-tools-vanagon'
+          comp = handle_component_name_transformations(vanagon_project, comp)
 
           BuildVanagonPackageHelpers::update_component_json(vanagon_project, comp, sha, path)
         end if local_vanagon_components
@@ -88,8 +90,7 @@ class BuildVanagonPackage < TaskHelper
           sha = BuildVanagonPackageHelpers::get_local_sha(path)
 
           # pe-tasks and pe-backup-tools both have edge cases where the repository name does not match the vanagon component name
-          comp = handle_component_name_transformations(vanagon_project, comp) if vanagon_project == 'pe-tasks-vanagon' || vanagon_project == 'pe-backup-tools-vanagon'
-
+          comp = handle_component_name_transformations(vanagon_project, comp)
           BuildVanagonPackageHelpers::update_component_json(vanagon_project, comp, sha, path)
         end if vanagon_component_prs
 
